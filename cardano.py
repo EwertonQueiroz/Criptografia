@@ -1,32 +1,46 @@
 import random
 
-frase = "Teste da grade de Cardano"
-
 def cardano (string):
     # Verificar se o que foi recebido por parâmetros é uma String, se não for faz o cast
     if type(string) != str:
         string = str(string)
 
-    # Retira os espaços em braco da String e deixa tudo maiúsculo
-    string = string.replace(" ", "")
     string = string.upper()
 
     # Listas que receberão a grade e as posições das letras que devem ser lidas
     nova_string = []
-    lista_posicoes = [1, 2, 3]
-    tamanho = len(string)
-    preencher = 100 - tamanho
-    dicionario = {1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "F", 7: "G", 8: "H", 9: "I", 10: "J",
-                  11: "K", 12: "L", 13: "M", 14: "N", 15: "O", 16: "P", 17: "Q", 18: "R", 19: "S", 20: "T",
-                  21: "U", 22: "V", 23: "W", 24: "X", 25: "Y", 26: "Z"}
+    lista_posicoes = []
 
-    # As letras da String recebida são inseridas na lista
-    for i in range(tamanho):
-        nova_string.append(string[i: i + 1])
+    alfabeto = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
+                "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
-    # A lista é preenchida com caracteres aleatórios do dicionário
-    for i in range(preencher):
-        nova_string.append(dicionario[random.randint(1, 26)])
+    # Retira todos os caracteres que não estão no alfabeto, inclusive letras acentuadas
+    for i in string:
+        if i not in alfabeto:
+            string = string.replace(i, "")
+
+    # A lista é preenchida com caracteres aleatórios do alfabeto
+    for i in range(100):
+        nova_string.append(alfabeto[random.randint(0, 25)])
+
+    # São gerados N número aleatório únicos que determinarão as posições das letras da mensagem na grade
+    # Com N sendo o tamanho da String após o tratamento
+    for i in range(len(string)):
+        x = random.randint(0, 99)
+
+        while (x in lista_posicoes):
+            x = random.randint(0, 99)
+
+        lista_posicoes.append(x)
+
+    # A lista contendo as posições é ordenada para se iniciar a substituição
+    lista_posicoes.sort()
+
+    # Substituição das letras aleatórias da grade pelas letras da mensagem
+    y = 0
+    for i in lista_posicoes:
+        nova_string[i] = string[y: y + 1]
+        y += 1
 
     # Atribuição da lista à grade que será devolvida pela função e remoção dos caracteres diferentes de letras
     grade = str(nova_string)
@@ -46,17 +60,27 @@ def cardano (string):
 
 
 def imprimir_cardano (grille, positions):
+    # Imprime os números das colunas
     for i in range(10):
-        print(str(i + 1) + "\t", end="")
+        print(str(i) + "\t", end="")
 
+    print()
+    print("-" * 40, end="")
+
+    # Impressão da grade
     for i in range(101):
+        # A cada 10 letras impressas, adiciona um marcador,
+        # imprime o número da linha e passa para a próxima
         if i % 10 == 0:
-            print(str(i-10)[0:1] + "\n")
+            print("| " + str(i - 10)[0:1] + "\n")
 
         print(grille[i:i + 1] + "\t", end="")
 
-    print(positions)
+    # Impressão da lista
+    print("\n" + positions)
 
+
+frase = "Teste da grade de Cardano"
 
 grade, posic = cardano(frase)
 
